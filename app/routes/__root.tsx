@@ -160,6 +160,12 @@ function RootComponent() {
                   Free Estimate
                 </Link>
                 <Link
+                  to="/store"
+                  className="text-[white] hover:text-gray-400 rounded-md transition-all duration-200 [&.active]:text-jasmine"
+                >
+                  Store
+                </Link>
+                <Link
                   to="/pay-online"
                   className="text-[white] hover:text-gray-400 rounded-md transition-all duration-200 [&.active]:text-jasmine"
                 >
@@ -286,6 +292,12 @@ function RootComponent() {
                   className="hover:text-jasmine transition-all duration-300"
                 >
                   Free Estimate
+                </Link>
+                <Link
+                  to="/store"
+                  className="hover:text-jasmine transition-all duration-300"
+                >
+                 Store
                 </Link>
                 <Link
                   to="/pay-online"

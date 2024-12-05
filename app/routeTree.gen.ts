@@ -12,6 +12,7 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
+import { Route as StoreIndexImport } from './routes/store/index'
 import { Route as PoolHeatingIndexImport } from './routes/pool-heating/index'
 import { Route as PayOnlineIndexImport } from './routes/pay-online/index'
 import { Route as FreeEstimateIndexImport } from './routes/free-estimate/index'
@@ -31,6 +32,12 @@ import { Route as ElectricityHowItWorksIndexImport } from './routes/electricity/
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const StoreIndexRoute = StoreIndexImport.update({
+  id: '/store/',
+  path: '/store/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -179,6 +186,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PoolHeatingIndexImport
       parentRoute: typeof rootRoute
     }
+    '/store/': {
+      id: '/store/'
+      path: '/store'
+      fullPath: '/store'
+      preLoaderRoute: typeof StoreIndexImport
+      parentRoute: typeof rootRoute
+    }
     '/electricity/how-it-works/': {
       id: '/electricity/how-it-works/'
       path: '/electricity/how-it-works'
@@ -235,6 +249,7 @@ export interface FileRoutesByFullPath {
   '/free-estimate': typeof FreeEstimateIndexRoute
   '/pay-online': typeof PayOnlineIndexRoute
   '/pool-heating': typeof PoolHeatingIndexRoute
+  '/store': typeof StoreIndexRoute
   '/electricity/how-it-works': typeof ElectricityHowItWorksIndexRoute
   '/electricity/incentives': typeof ElectricityIncentivesIndexRoute
   '/electricity/photos': typeof ElectricityPhotosIndexRoute
@@ -252,6 +267,7 @@ export interface FileRoutesByTo {
   '/free-estimate': typeof FreeEstimateIndexRoute
   '/pay-online': typeof PayOnlineIndexRoute
   '/pool-heating': typeof PoolHeatingIndexRoute
+  '/store': typeof StoreIndexRoute
   '/electricity/how-it-works': typeof ElectricityHowItWorksIndexRoute
   '/electricity/incentives': typeof ElectricityIncentivesIndexRoute
   '/electricity/photos': typeof ElectricityPhotosIndexRoute
@@ -270,6 +286,7 @@ export interface FileRoutesById {
   '/free-estimate/': typeof FreeEstimateIndexRoute
   '/pay-online/': typeof PayOnlineIndexRoute
   '/pool-heating/': typeof PoolHeatingIndexRoute
+  '/store/': typeof StoreIndexRoute
   '/electricity/how-it-works/': typeof ElectricityHowItWorksIndexRoute
   '/electricity/incentives/': typeof ElectricityIncentivesIndexRoute
   '/electricity/photos/': typeof ElectricityPhotosIndexRoute
@@ -289,6 +306,7 @@ export interface FileRouteTypes {
     | '/free-estimate'
     | '/pay-online'
     | '/pool-heating'
+    | '/store'
     | '/electricity/how-it-works'
     | '/electricity/incentives'
     | '/electricity/photos'
@@ -305,6 +323,7 @@ export interface FileRouteTypes {
     | '/free-estimate'
     | '/pay-online'
     | '/pool-heating'
+    | '/store'
     | '/electricity/how-it-works'
     | '/electricity/incentives'
     | '/electricity/photos'
@@ -321,6 +340,7 @@ export interface FileRouteTypes {
     | '/free-estimate/'
     | '/pay-online/'
     | '/pool-heating/'
+    | '/store/'
     | '/electricity/how-it-works/'
     | '/electricity/incentives/'
     | '/electricity/photos/'
@@ -339,6 +359,7 @@ export interface RootRouteChildren {
   FreeEstimateIndexRoute: typeof FreeEstimateIndexRoute
   PayOnlineIndexRoute: typeof PayOnlineIndexRoute
   PoolHeatingIndexRoute: typeof PoolHeatingIndexRoute
+  StoreIndexRoute: typeof StoreIndexRoute
   ElectricityHowItWorksIndexRoute: typeof ElectricityHowItWorksIndexRoute
   ElectricityIncentivesIndexRoute: typeof ElectricityIncentivesIndexRoute
   ElectricityPhotosIndexRoute: typeof ElectricityPhotosIndexRoute
@@ -356,6 +377,7 @@ const rootRouteChildren: RootRouteChildren = {
   FreeEstimateIndexRoute: FreeEstimateIndexRoute,
   PayOnlineIndexRoute: PayOnlineIndexRoute,
   PoolHeatingIndexRoute: PoolHeatingIndexRoute,
+  StoreIndexRoute: StoreIndexRoute,
   ElectricityHowItWorksIndexRoute: ElectricityHowItWorksIndexRoute,
   ElectricityIncentivesIndexRoute: ElectricityIncentivesIndexRoute,
   ElectricityPhotosIndexRoute: ElectricityPhotosIndexRoute,
@@ -382,6 +404,7 @@ export const routeTree = rootRoute
         "/free-estimate/",
         "/pay-online/",
         "/pool-heating/",
+        "/store/",
         "/electricity/how-it-works/",
         "/electricity/incentives/",
         "/electricity/photos/",
@@ -413,6 +436,9 @@ export const routeTree = rootRoute
     },
     "/pool-heating/": {
       "filePath": "pool-heating/index.jsx"
+    },
+    "/store/": {
+      "filePath": "store/index.jsx"
     },
     "/electricity/how-it-works/": {
       "filePath": "electricity/how-it-works/index.jsx"
