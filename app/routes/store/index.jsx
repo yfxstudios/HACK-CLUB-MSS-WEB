@@ -22,6 +22,8 @@ function RouteComponent() {
   const [error, setError] = useState("");
   const [cost, setCost] = useState(0);
 
+  const [phone, setPhone] = useState("");
+
   const { isLoading } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: "AIzaSyDCb1AoXq9XFI1aBOqDDT-oSWmM7-ySw1w",
@@ -48,6 +50,23 @@ function RouteComponent() {
         e.target[6].value
     );
     setCalculating(true);
+  };
+
+  const phoneNumberFormatter = (e) => {
+    const input = e.target.value;
+    const formatted = formatPhoneNumber(input);
+    return formatted;
+  };
+
+  const formatPhoneNumber = (input) => {
+    if (!input) return input;
+    const phoneNumber = input.replace(/[^\d]/g, "");
+    const phoneNumberLength = phoneNumber.length;
+    if (phoneNumberLength < 4) return phoneNumber;
+    if (phoneNumberLength < 7) {
+      return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
+    }
+    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6, 10)}`;
   };
 
   return (
@@ -103,6 +122,8 @@ function RouteComponent() {
                   type="tel"
                   placeholder="Phone"
                   className="border border-night p-2 rounded-lg"
+                  value={phone}
+                  onChange={(e) => setPhone(phoneNumberFormatter(e))}
                   required
                 />
                 <input
