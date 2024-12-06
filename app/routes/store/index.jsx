@@ -1,58 +1,58 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { useState } from 'react'
-import { products } from '../../products'
+import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
+import { products } from "../../products";
 
-import { DistanceMatrixService, useJsApiLoader } from '@react-google-maps/api'
-import { postRequest } from '../../utils/postRequest'
+import { DistanceMatrixService, useJsApiLoader } from "@react-google-maps/api";
+import { postRequest } from "../../utils/postRequest";
 
-export const Route = createFileRoute('/store/')({
+export const Route = createFileRoute("/store/")({
   component: RouteComponent,
-})
+});
 
 function RouteComponent() {
-  const [showModal, setShowModal] = useState(false)
-  const [selectedProduct, setSelectedProduct] = useState(null)
+  const [showModal, setShowModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
-  const [calculating, setCalculating] = useState(false)
+  const [calculating, setCalculating] = useState(false);
 
-  const [address, setAddress] = useState('')
-  const [destination, setDestination] = useState('')
+  const [address, setAddress] = useState("");
+  const [destination, setDestination] = useState("");
 
-  const [distance, setDistance] = useState(0)
-  const [error, setError] = useState('')
-  const [cost, setCost] = useState(0)
+  const [distance, setDistance] = useState(0);
+  const [error, setError] = useState("");
+  const [cost, setCost] = useState(0);
 
   const { isLoading } = useJsApiLoader({
-    id: 'google-map-script',
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-  })
+    id: "google-map-script",
+    googleMapsApiKey: "AIzaSyDCb1AoXq9XFI1aBOqDDT-oSWmM7-ySw1w",
+  });
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return <div>Loading...</div>;
   }
 
   const clickHandler = (id) => {
-    setShowModal(!showModal)
-    setSelectedProduct(products.find((product) => product.id === id))
-  }
+    setShowModal(!showModal);
+    setSelectedProduct(products.find((product) => product.id === id));
+  };
 
   const submitHandler = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     setAddress(
       e.target[3].value +
-        ' ' +
+        " " +
         e.target[4].value +
-        ' ' +
+        " " +
         e.target[5].value +
-        ' ' +
-        e.target[6].value,
-    )
-    setCalculating(true)
-  }
+        " " +
+        e.target[6].value
+    );
+    setCalculating(true);
+  };
 
   return (
     <div className="w-screen bg-night py-16 flex justify-center">
-      {error != '' && (
+      {error != "" && (
         <div className="bg-red-500 fixed text-white p-4 rounded-lg text-center bottom-4 right-4 z-10">
           {error}
         </div>
@@ -67,11 +67,11 @@ function RouteComponent() {
           <div className="fixed flex justify-center items-center">
             <div className="bg-white p-8 rounded-lg shadow-lg">
               <h2 className="text-2xl text-night w-full">
-                Book Now -{' '}
+                Book Now -{" "}
                 <span className="font-bold">{selectedProduct.name}</span>
               </h2>
               <p className="text-[#999999] mt-4">
-                Price varies by distance.{' '}
+                Price varies by distance.{" "}
                 {`($${selectedProduct.priceMin} - ${selectedProduct.priceMax})`}
               </p>
               <form
@@ -147,8 +147,8 @@ function RouteComponent() {
         <DistanceMatrixService
           options={{
             destinations: [address],
-            origins: ['450 Glass Lane, Modesto CA 95356'],
-            travelMode: 'DRIVING',
+            origins: ["450 Glass Lane, Modesto CA 95356"],
+            travelMode: "DRIVING",
             // Imperial system
             unitSystem: 1,
             durationInTraffic: false,
@@ -156,13 +156,13 @@ function RouteComponent() {
             avoidTolls: true,
           }}
           callback={async (response) => {
-            if (response.rows[0].elements[0].status !== 'OK') {
-              console.error('Error: ', response.rows[0].elements[0].status)
-              setCalculating(false)
-              return
+            if (response.rows[0].elements[0].status !== "OK") {
+              console.error("Error: ", response.rows[0].elements[0].status);
+              setCalculating(false);
+              return;
             }
 
-            setDestination(response.destinationAddresses[0])
+            setDestination(response.destinationAddresses[0]);
             // dispatch(
             //   setUser({
             //     ...userStore,
@@ -182,35 +182,35 @@ function RouteComponent() {
             //   setError("");
             // }
 
-            setDistance(response.rows[0].elements[0].distance.text)
-            setCalculating(false)
+            setDistance(response.rows[0].elements[0].distance.text);
+            setCalculating(false);
 
-            const baseCost = products[selectedProduct.id].priceMin
-            const highCost = products[selectedProduct.id].priceMax
+            const baseCost = products[selectedProduct.id].priceMin;
+            const highCost = products[selectedProduct.id].priceMax;
             // baseCost * a = highCost
-            const a = highCost / baseCost
+            const a = highCost / baseCost;
 
             // depending on distance, calculate cost, keep in price range
-            const distance = response.rows[0].elements[0].distance.value / 1000
-            let cost = baseCost + distance * a
+            const distance = response.rows[0].elements[0].distance.value / 1000;
+            let cost = baseCost + distance * a;
             if (cost > highCost) {
-              cost = highCost
+              cost = highCost;
             }
-            setCost(Math.ceil(cost / 10) * 10)
+            setCost(Math.ceil(cost / 10) * 10);
 
-            console.log('Distance: ', response.rows[0].elements[0].distance)
-            console.log('Duration: ', response.rows[0].elements[0].duration)
-            console.log('Cost: ', cost)
+            console.log("Distance: ", response.rows[0].elements[0].distance);
+            console.log("Duration: ", response.rows[0].elements[0].duration);
+            console.log("Cost: ", cost);
 
-            setShowModal(false)
+            setShowModal(false);
 
-            const api = await postRequest('/api/shop', {
+            const api = await postRequest("/api/shop", {
               name: selectedProduct.name,
               price: cost,
               destination: response.destinationAddresses[0],
-            })
+            });
 
-            window.location.href = api.url
+            window.location.href = api.url;
           }}
         />
       )}
@@ -290,5 +290,5 @@ function RouteComponent() {
         </div>
       </div>
     </div>
-  )
+  );
 }
